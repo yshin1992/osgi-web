@@ -1,16 +1,11 @@
 package org.huyue.coffee;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.Servlet;
 
 import org.eclipse.equinox.http.helper.BundleEntryHttpContext;
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
-import org.huyue.coffee.controller.Action;
 import org.huyue.coffee.controller.ControllerServlet;
-import org.huyue.coffee.controller.HelloAction;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -23,12 +18,6 @@ public class Activator implements BundleActivator {
 	private static BundleContext context;
 
 	public static String contextName = "/coffee";
-	
-	public static Map<String, Action> actionMap = new HashMap<String, Action>();
-	
-	static {
-		actionMap.put("/hello.do", new HelloAction());
-	}
 	
 	static BundleContext getContext() {
 		return context;

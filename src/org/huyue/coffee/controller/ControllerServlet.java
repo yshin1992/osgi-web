@@ -23,23 +23,10 @@ public class ControllerServlet extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		//url路由
 		String path = request.getRequestURI();
 		
-		//url路由
-		if (Activator.contextName.equals(path)) {
-			request.getRequestDispatcher("/pages/index.html").forward(request, response);
-		} else {
-			String actionName = path.substring(Activator.contextName.length());
-			Action action = Activator.actionMap.get(actionName);
-			
-			if (action != null) {
-				//对应action处理请求
-				action.handleRequest(request, response);
-			} else {
-				request.getRequestDispatcher("/pages/error.html").forward(request, response);
-			}
-		}
+		String actionName = path.substring(Activator.contextName.length());
 	}
 	
 	

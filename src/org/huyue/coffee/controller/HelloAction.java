@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 public class HelloAction extends Action {
 
 	@Override
-	public void handleRequest(HttpServletRequest request, HttpServletResponse response)
+	public void prepare(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("username", "guest");
 		request.getRequestDispatcher("/jsp/hello.jsp").forward(request, response);
 	}
+	
+	
 
 }
