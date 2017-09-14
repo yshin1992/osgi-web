@@ -1,17 +1,24 @@
 package org.huyue.coffee;
 
+import java.net.URL;
+import java.util.Map;
+
 import javax.servlet.Servlet;
 
 import org.eclipse.equinox.http.helper.BundleEntryHttpContext;
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
 import org.huyue.coffee.controller.ControllerServlet;
+import org.huyue.coffee.sys.URLMapper;
+import org.huyue.coffee.sys.cache.URLMapperCache;
+import org.huyue.coffee.sys.util.URLMapperReader;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.util.tracker.ServiceTracker;
+import org.xml.sax.InputSource;
 
 public class Activator implements BundleActivator {
 
@@ -26,8 +33,18 @@ public class Activator implements BundleActivator {
 	private ServiceTracker httpServiceTracker;
 
 	public void start(BundleContext context) throws Exception {
+//		PropertyConfigurator.configure(context.getBundle().getEntry("resources/log4j.properties"));
+		
 		httpServiceTracker = new HttpServiceTracker(context);
 		httpServiceTracker.open();
+		//从配置文件中读取action列表
+		//后期改用注解
+		URL entry = context.getBundle().getEntry("resources/url-mapper.xml");
+		InputSource source = new InputSource(entry.openStream());
+		Map<String, URLMapper> readURLs = URLMapperReader.readURLs(source);
+		URLMapperCache.putURLMapper(readURLs);
+		System.out.println("加载Action完成:" + readURLs.entrySet());
+		
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -41,6 +58,7 @@ public class Activator implements BundleActivator {
 		}
 
 		public Object addingService(ServiceReference reference) {
+//			LogUtil.getLogger(this).debug("Service adding ....");
 			System.out.println("Service adding ....");
 			final HttpService httpService = (HttpService) context.getService(reference);
 			try {
@@ -63,9 +81,10 @@ public class Activator implements BundleActivator {
 				Servlet controller = new ControllerServlet();
 				httpService.registerServlet(contextName+"/*.do",controller,null,commonContext);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+//				LogUtil.getLogger(this).error("Bundle注册资源异常",e);
 				e.printStackTrace();
 			}
+//			LogUtil.getLogger(this).debug("Service added!");
 			System.out.println("Service added!");
 			return httpService;
 		}

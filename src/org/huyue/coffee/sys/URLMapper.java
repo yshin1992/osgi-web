@@ -13,6 +13,21 @@ public class URLMapper {
 	
 	private String method;
 
+	public URLMapper(){
+		
+	}
+	
+	/**
+	 * 初始化构造函数
+	 * @param id Action唯一标识
+	 * @param clazz 包含包名的Action类名称
+	 * @param method 方法
+	 */
+	public URLMapper(String id,String clazz,String method){
+		this.id = id;
+		this.clazz = clazz;
+		this.method = method;
+	}
 
 	public String getClazz() {
 		return clazz;

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<action id="/hello.do" class="org.huyue.coffee.controller.HelloAction" method="prepare">
-</action>
-
-<action id="/hello.do" class="org.huyue.coffee.controller.HelloAction" method="confirm">
-</action>
-
-<action id="/hello.do" class="org.huyue.coffee.controller.HelloAction" method="submit">
-</action>
+<actions>
+	<action id="/hello.do" class="org.huyue.coffee.controller.HelloAction" method="hello"></action>
+	<action id="/say.do" class="org.huyue.coffee.controller.HelloAction" method="say"></action>
+	<action id="/done.do" class="org.huyue.coffee.controller.HelloAction" method="done"></action>
+</actions>
