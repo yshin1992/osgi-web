@@ -1,6 +1,8 @@
 package org.huyue.coffee;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -8,9 +10,11 @@ import javax.servlet.Servlet;
 import org.eclipse.equinox.http.helper.BundleEntryHttpContext;
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
-import org.huyue.coffee.controller.ControllerServlet;
+import org.huyue.coffee.filter.CharacterFilter;
 import org.huyue.coffee.sys.URLMapper;
 import org.huyue.coffee.sys.cache.URLMapperCache;
+import org.huyue.coffee.sys.controller.ControllerServlet;
+import org.huyue.coffee.sys.filter.Filter;
 import org.huyue.coffee.sys.util.URLMapperReader;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -78,7 +82,10 @@ public class Activator implements BundleActivator {
 				Servlet testServlet = new TestServlet();
 				httpService.registerServlet("/test.do",testServlet,null,commonContext);
 				
-				Servlet controller = new ControllerServlet();
+				List<Filter> filters = new ArrayList<Filter>();
+				filters.add(new CharacterFilter());
+				
+				Servlet controller = new ControllerServlet(filters);
 				httpService.registerServlet(contextName+"/*.do",controller,null,commonContext);
 			} catch (Exception e) {
 //				LogUtil.getLogger(this).error("Bundle注册资源异常",e);

@@ -1,5 +1,7 @@
 package org.huyue.coffee.controller;
 
+import org.huyue.coffee.sys.controller.Action;
+
 public class HelloAction extends Action {
 
 	public void hello(){
@@ -16,4 +18,5 @@ public class HelloAction extends Action {
 		addAttr("username", "Sana");
 		forward("/jsp/hello.jsp");
 	}
+	
 }
