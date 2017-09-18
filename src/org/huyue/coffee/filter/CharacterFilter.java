@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.huyue.coffee.sys.filter.Filter;
+import org.huyue.coffee.sys.util.LogUtil;
 
 /**
  * 字符编码过滤器
@@ -19,7 +20,7 @@ public class CharacterFilter implements Filter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		System.out.println("执行字符编码过滤器");
+		LogUtil.getLogger(this).debug("执行字符编码过滤器");
 		return true;
 	}
 

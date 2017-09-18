@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.Servlet;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.equinox.http.helper.BundleEntryHttpContext;
 import org.eclipse.equinox.http.helper.ContextPathServletAdaptor;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
@@ -15,6 +17,7 @@ import org.huyue.coffee.sys.URLMapper;
 import org.huyue.coffee.sys.cache.URLMapperCache;
 import org.huyue.coffee.sys.controller.ControllerServlet;
 import org.huyue.coffee.sys.filter.Filter;
+import org.huyue.coffee.sys.util.LogUtil;
 import org.huyue.coffee.sys.util.URLMapperReader;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -26,6 +29,8 @@ import org.xml.sax.InputSource;
 
 public class Activator implements BundleActivator {
 
+	private static final Logger log = Logger.getLogger(Activator.class);
+	
 	private static BundleContext context;
 
 	public static String contextName = "/coffee";
@@ -37,8 +42,7 @@ public class Activator implements BundleActivator {
 	private ServiceTracker httpServiceTracker;
 
 	public void start(BundleContext context) throws Exception {
-//		PropertyConfigurator.configure(context.getBundle().getEntry("resources/log4j.properties"));
-		
+		PropertyConfigurator.configure(context.getBundle().getEntry("resources/log4j.properties"));
 		httpServiceTracker = new HttpServiceTracker(context);
 		httpServiceTracker.open();
 		//从配置文件中读取action列表
@@ -47,7 +51,7 @@ public class Activator implements BundleActivator {
 		InputSource source = new InputSource(entry.openStream());
 		Map<String, URLMapper> readURLs = URLMapperReader.readURLs(source);
 		URLMapperCache.putURLMapper(readURLs);
-		System.out.println("加载Action完成:" + readURLs.entrySet());
+		log.error("加载Action完成:" + readURLs.entrySet());
 		
 	}
 
@@ -62,8 +66,7 @@ public class Activator implements BundleActivator {
 		}
 
 		public Object addingService(ServiceReference reference) {
-//			LogUtil.getLogger(this).debug("Service adding ....");
-			System.out.println("Service adding ....");
+			LogUtil.getLogger(this).debug("Service adding ....");
 			final HttpService httpService = (HttpService) context.getService(reference);
 			try {
 				HttpContext commonContext = new BundleEntryHttpContext(context.getBundle(), "/WebRoot"); 
@@ -88,11 +91,9 @@ public class Activator implements BundleActivator {
 				Servlet controller = new ControllerServlet(filters);
 				httpService.registerServlet(contextName+"/*.do",controller,null,commonContext);
 			} catch (Exception e) {
-//				LogUtil.getLogger(this).error("Bundle注册资源异常",e);
-				e.printStackTrace();
+				LogUtil.getLogger(this).error("Bundle注册资源异常",e);
 			}
-//			LogUtil.getLogger(this).debug("Service added!");
-			System.out.println("Service added!");
+			LogUtil.getLogger(this).debug("Service added!");
 			return httpService;
 		}
 
